@@ -64,6 +64,31 @@ A clean hero section encouraging users to upload their resume.
 - 📄 PDF export for career report  
 
 ---
+## ⚡ Installation & Setup  
 
-## 📂 Project Structure  
-coming soon...
+### 1️⃣ Clone the repository  
+git clone https://github.com/your-username/career-mentor-platform.git
+cd career-mentor-platform
+
+2️⃣ Install dependencies
+# Install server dependencies
+cd server
+npm install
+
+# Install client dependencies
+cd ../client
+npm install
+3️⃣ Setup environment variables
+Create a .env file in server/ with:
+
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+OPENAI_API_KEY=your_openai_key   # (optional if using OpenAI for NLP)
+4️⃣ Run the project
+# Run backend
+cd server
+npm run dev
+
+# Run frontend
+cd ../client
+npm start
