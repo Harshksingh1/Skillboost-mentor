@@ -67,7 +67,7 @@ A clean hero section encouraging users to upload their resume.
 ## ⚡ Installation & Setup  
 
 ### 1️⃣ Clone the repository  
-git clone https://github.com/your-username/career-mentor-platform.git
+git clone https://github.com/Harshksingh1/Skillboost-mentor.git
 cd career-mentor-platform
 
 2️⃣ Install dependencies
