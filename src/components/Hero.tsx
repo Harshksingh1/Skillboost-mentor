@@ -1,8 +1,11 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Upload, Brain, TrendingUp, Target } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import heroImage from "@/assets/hero-dashboard.jpg";
 
 const Hero = () => {
+  const { user } = useAuth();
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5">
       {/* Background decoration */}
@@ -30,10 +33,19 @@ const Hero = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="lg" className="text-lg px-8 py-4 h-auto">
-                <Upload className="w-5 h-5" />
-                Upload Resume & Start
-              </Button>
+              {user ? (
+                <Button variant="hero" size="lg" className="text-lg px-8 py-4 h-auto">
+                  <Upload className="w-5 h-5" />
+                  Upload Resume & Start
+                </Button>
+              ) : (
+                <Button variant="hero" size="lg" asChild className="text-lg px-8 py-4 h-auto">
+                  <Link to="/auth">
+                    <Upload className="w-5 h-5" />
+                    Get Started Free
+                  </Link>
+                </Button>
+              )}
               <Button variant="hero-outline" size="lg" className="text-lg px-8 py-4 h-auto">
                 <TrendingUp className="w-5 h-5" />
                 View Demo Dashboard
