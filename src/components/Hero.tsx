@@ -34,9 +34,11 @@ const Hero = () => {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               {user ? (
-                <Button variant="hero" size="lg" className="text-lg px-8 py-4 h-auto">
-                  <Upload className="w-5 h-5" />
-                  Upload Resume & Start
+                <Button variant="hero" size="lg" asChild className="text-lg px-8 py-4 h-auto">
+                  <Link to="/dashboard">
+                    <TrendingUp className="w-5 h-5" />
+                    Go to Dashboard
+                  </Link>
                 </Button>
               ) : (
                 <Button variant="hero" size="lg" asChild className="text-lg px-8 py-4 h-auto">

@@ -31,9 +31,15 @@ const Navigation = () => {
             <a href="#features" className="text-foreground hover:text-primary transition-colors">
               Features
             </a>
-            <a href="#dashboard" className="text-foreground hover:text-primary transition-colors">
-              Dashboard
-            </a>
+            {user ? (
+              <Link to="/dashboard" className="text-foreground hover:text-primary transition-colors">
+                Dashboard
+              </Link>
+            ) : (
+              <a href="#dashboard" className="text-foreground hover:text-primary transition-colors">
+                Dashboard
+              </a>
+            )}
             <a href="#pricing" className="text-foreground hover:text-primary transition-colors">
               Pricing
             </a>
@@ -90,9 +96,15 @@ const Navigation = () => {
               <a href="#features" className="text-foreground hover:text-primary transition-colors py-2">
                 Features
               </a>
-              <a href="#dashboard" className="text-foreground hover:text-primary transition-colors py-2">
-                Dashboard
-              </a>
+              {user ? (
+                <Link to="/dashboard" className="text-foreground hover:text-primary transition-colors py-2">
+                  Dashboard
+                </Link>
+              ) : (
+                <a href="#dashboard" className="text-foreground hover:text-primary transition-colors py-2">
+                  Dashboard
+                </a>
+              )}
               <a href="#pricing" className="text-foreground hover:text-primary transition-colors py-2">
                 Pricing
               </a>
