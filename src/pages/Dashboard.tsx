@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Navigation from "@/components/Navigation";
+import ProfileSetup from "@/components/ProfileSetup";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Brain, 
   Target, 
@@ -19,12 +23,59 @@ import {
   Star,
   CheckCircle,
   Clock,
-  Briefcase
+  Briefcase,
+  Settings,
+  LogOut
 } from "lucide-react";
 
 const Dashboard = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, signOut } = useAuth();
+  const { toast } = useToast();
   const [careerProgress, setCareerProgress] = useState(68);
+  const [showProfileSetup, setShowProfileSetup] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+
+  // Check if user has completed profile setup
+  useEffect(() => {
+    const checkProfile = async () => {
+      if (user) {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+        
+        if (error && error.code !== 'PGRST116') {
+          console.error('Error fetching profile:', error);
+        } else if (profile) {
+          setUserProfile(profile);
+          // Show setup if key fields are missing
+          const isIncomplete = !profile.first_name || !profile.last_name || !profile.username;
+          setShowProfileSetup(isIncomplete);
+        } else {
+          setShowProfileSetup(true);
+        }
+      }
+    };
+
+    checkProfile();
+  }, [user]);
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: "Error signing out",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Signed out successfully",
+        description: "You have been logged out.",
+      });
+    }
+  };
 
   if (loading) {
     return (
@@ -79,20 +130,51 @@ const Dashboard = () => {
     { title: "Network with 10 Industry Professionals", progress: 30, deadline: "Nov 2024" },
   ];
 
-  return (
-    <div className="min-h-screen bg-background pt-20 pb-12">
-      <div className="container mx-auto px-6 space-y-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold">Welcome back!</h1>
-            <p className="text-muted-foreground">Let's continue building your career journey</p>
+  // Show profile setup if needed
+  if (showProfileSetup) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="pt-20 pb-12">
+          <div className="container mx-auto px-6">
+            <div className="mb-8 text-center">
+              <h1 className="text-3xl font-bold mb-2">Welcome to AI Career Mentor!</h1>
+              <p className="text-muted-foreground">Let's set up your profile to get personalized career insights</p>
+            </div>
+            <ProfileSetup />
           </div>
-          <Button className="gap-2">
-            <MessageSquare className="w-4 h-4" />
-            Chat with AI Mentor
-          </Button>
         </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <div className="pt-20 pb-12">
+        <div className="container mx-auto px-6 space-y-8">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold">
+                Welcome back{userProfile?.first_name ? `, ${userProfile.first_name}` : ''}!
+              </h1>
+              <p className="text-muted-foreground">Let's continue building your career journey</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" onClick={() => setShowProfileSetup(true)}>
+                <Settings className="w-4 h-4 mr-2" />
+                Profile Setup
+              </Button>
+              <Button className="gap-2">
+                <MessageSquare className="w-4 h-4" />
+                Chat with AI Mentor
+              </Button>
+              <Button variant="ghost" size="icon" onClick={handleSignOut}>
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
 
         {/* Main Dashboard Content */}
         <Tabs defaultValue="overview" className="space-y-6">
@@ -320,6 +402,7 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </div>
   );

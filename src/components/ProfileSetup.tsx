@@ -42,6 +42,9 @@ const ProfileSetup = () => {
         title: "Profile updated successfully",
         description: "Your profile information has been saved.",
       });
+      
+      // Refresh the page to show the dashboard
+      window.location.reload();
     } catch (error) {
       toast({
         title: "Error updating profile",
