@@ -48,6 +48,12 @@ All colors MUST be HSL.
     --card-gradient: linear-gradient(145deg, hsl(0 0% 100%), hsl(214 32% 97%));
     --glow-shadow: 0 20px 60px -10px hsl(224 76% 48% / 0.3);
     --subtle-glow: 0 0 40px hsl(224 100% 70% / 0.15);
+    --glass-bg: hsl(0 0% 100% / 0.8);
+    --glass-border: hsl(224 76% 48% / 0.2);
+    
+    /* Animation tokens */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     
     /* Chart colors for career insights */
     --chart-1: 224 76% 48%;
@@ -119,5 +125,32 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply backdrop-blur-sm bg-glass-bg border border-glass-border;
+  }
+  
+  .glow-effect {
+    box-shadow: var(--glow-shadow);
+  }
+  
+  .smooth-transition {
+    transition: var(--transition-smooth);
+  }
+  
+  .bounce-transition {
+    transition: var(--transition-bounce);
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+  
+  .hero-gradient {
+    background: var(--hero-gradient);
   }
 }

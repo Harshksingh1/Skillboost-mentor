@@ -6,8 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import Navigation from "@/components/Navigation";
 import ProfileSetup from "@/components/ProfileSetup";
+import AIMentorChat from "@/components/AIMentorChat";
+import SkillAssessment from "@/components/SkillAssessment";
+import CareerGoals from "@/components/CareerGoals";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -166,10 +170,25 @@ const Dashboard = () => {
                 <Settings className="w-4 h-4 mr-2" />
                 Profile Setup
               </Button>
-              <Button className="gap-2">
-                <MessageSquare className="w-4 h-4" />
-                Chat with AI Mentor
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="gap-2">
+                    <MessageSquare className="w-4 h-4" />
+                    Chat with AI Mentor
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden">
+                  <DialogHeader>
+                    <DialogTitle>AI Career Mentor</DialogTitle>
+                    <DialogDescription>
+                      Get personalized career advice and insights from your AI mentor
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="h-[60vh]">
+                    <AIMentorChat />
+                  </div>
+                </DialogContent>
+              </Dialog>
               <Button variant="ghost" size="icon" onClick={handleSignOut}>
                 <LogOut className="w-4 h-4" />
               </Button>
@@ -178,11 +197,12 @@ const Dashboard = () => {
 
         {/* Main Dashboard Content */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="skills">Skills</TabsTrigger>
             <TabsTrigger value="goals">Goals</TabsTrigger>
             <TabsTrigger value="insights">AI Insights</TabsTrigger>
+            <TabsTrigger value="mentor">AI Mentor</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -310,42 +330,28 @@ const Dashboard = () => {
                     <Progress value={skill.level} className="h-2" />
                   </div>
                 ))}
-                <Button className="w-full mt-6">
-                  Take Skill Assessment
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="w-full mt-6">
+                      Take Skill Assessment
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Skill Assessment</DialogTitle>
+                      <DialogDescription>
+                        Complete this assessment to get personalized insights and recommendations
+                      </DialogDescription>
+                    </DialogHeader>
+                    <SkillAssessment />
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="goals" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Career Goals</CardTitle>
-                <CardDescription>Track your progress towards career milestones</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {goals.map((goal, index) => (
-                  <div key={index} className="p-4 rounded-lg border border-border space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium">{goal.title}</h4>
-                      <Badge variant="outline">{goal.deadline}</Badge>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Progress</span>
-                        <span>{goal.progress}%</span>
-                      </div>
-                      <Progress value={goal.progress} />
-                    </div>
-                    <Button variant="outline" size="sm">Update Progress</Button>
-                  </div>
-                ))}
-                <Button className="w-full">
-                  <Target className="w-4 h-4 mr-2" />
-                  Set New Goal
-                </Button>
-              </CardContent>
-            </Card>
+            <CareerGoals />
           </TabsContent>
 
           <TabsContent value="insights" className="space-y-6">
@@ -373,6 +379,10 @@ const Dashboard = () => {
                 </Card>
               ))}
             </div>
+          </TabsContent>
+
+          <TabsContent value="mentor" className="space-y-6">
+            <AIMentorChat />
           </TabsContent>
         </Tabs>
 
