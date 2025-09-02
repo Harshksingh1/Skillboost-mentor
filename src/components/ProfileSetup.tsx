@@ -11,7 +11,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Upload, User, Save, Camera, ArrowLeft, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const ProfileSetup = () => {
+interface ProfileSetupProps {
+  onBackToDashboard?: () => void;
+}
+
+const ProfileSetup = ({ onBackToDashboard }: ProfileSetupProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -210,7 +214,10 @@ const ProfileSetup = () => {
       {/* Header with Back Button */}
       <div className="flex items-center gap-4 mb-6">
         <Button
-          onClick={() => navigate('/dashboard')}
+          onClick={() => {
+            onBackToDashboard?.();
+            navigate('/dashboard');
+          }}
           variant="outline"
           size="icon"
         >

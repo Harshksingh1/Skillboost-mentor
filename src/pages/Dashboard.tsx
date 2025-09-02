@@ -38,6 +38,7 @@ const Dashboard = () => {
   const [careerProgress, setCareerProgress] = useState(68);
   const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [forceShowDashboard, setForceShowDashboard] = useState(false);
 
   // Check if user has completed profile setup
   useEffect(() => {
@@ -53,11 +54,11 @@ const Dashboard = () => {
           console.error('Error fetching profile:', error);
         } else if (profile) {
           setUserProfile(profile);
-          // Show setup if key fields are missing
+          // Show setup if key fields are missing and user hasn't forced dashboard view
           const isIncomplete = !profile.first_name || !profile.last_name || !profile.username;
-          setShowProfileSetup(isIncomplete);
+          setShowProfileSetup(isIncomplete && !forceShowDashboard);
         } else {
-          setShowProfileSetup(true);
+          setShowProfileSetup(!forceShowDashboard);
         }
       }
     };
@@ -145,7 +146,7 @@ const Dashboard = () => {
               <h1 className="text-3xl font-bold mb-2">Welcome to AI Career Mentor!</h1>
               <p className="text-muted-foreground">Let's set up your profile to get personalized career insights</p>
             </div>
-            <ProfileSetup />
+            <ProfileSetup onBackToDashboard={() => setForceShowDashboard(true)} />
           </div>
         </div>
       </div>
