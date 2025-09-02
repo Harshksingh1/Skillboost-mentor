@@ -151,15 +151,36 @@ const ProfileSetup = () => {
     
     setLoading(true);
     try {
-      const { error } = await supabase
+      // Check if profile exists first
+      const { data: existingProfile } = await supabase
         .from('profiles')
-        .upsert({
-          user_id: user.id,
-          ...profile,
-          updated_at: new Date().toISOString()
-        });
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-      if (error) throw error;
+      if (existingProfile) {
+        // Update existing profile
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            ...profile,
+            updated_at: new Date().toISOString()
+          })
+          .eq('user_id', user.id);
+        
+        if (error) throw error;
+      } else {
+        // Insert new profile
+        const { error } = await supabase
+          .from('profiles')
+          .insert({
+            user_id: user.id,
+            ...profile,
+            updated_at: new Date().toISOString()
+          });
+        
+        if (error) throw error;
+      }
 
       toast({
         title: "Profile saved successfully",
@@ -169,6 +190,7 @@ const ProfileSetup = () => {
       // Navigate to dashboard
       navigate('/dashboard');
     } catch (error) {
+      console.error('Profile save error:', error);
       toast({
         title: "Error saving profile",
         description: "Please try again later.",
